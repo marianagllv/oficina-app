@@ -146,11 +146,13 @@ export default function RelatorioPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-[#4b0d16] text-[#fff3df] p-6">
       <div className="max-w-5xl mx-auto">
+
         <a href="/admin" className="text-[#df6f2a] font-bold">
           Voltar para o painel
         </a>
 
         <div className="mt-8 bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-8 shadow-2xl">
+
           <p className="text-[#df6f2a] font-black">
             RELATÓRIO #{relatorio.id}
           </p>
@@ -164,7 +166,9 @@ export default function RelatorioPage({ params }: Props) {
           </p>
 
           <div className="mt-8 grid md:grid-cols-2 gap-5">
+
             <div className="bg-white/70 rounded-2xl p-5">
+
               <p className="text-sm font-bold text-[#df6f2a] uppercase">
                 Status
               </p>
@@ -182,9 +186,11 @@ export default function RelatorioPage({ params }: Props) {
                 <option value="Finalizado">Finalizado</option>
                 <option value="Entregue">Entregue</option>
               </select>
+
             </div>
 
             <div className="bg-white/70 rounded-2xl p-5">
+
               <p className="text-sm font-bold text-[#df6f2a] uppercase">
                 Serviço
               </p>
@@ -192,10 +198,13 @@ export default function RelatorioPage({ params }: Props) {
               <p className="mt-3 text-xl font-semibold">
                 {relatorio.servico}
               </p>
+
             </div>
+
           </div>
 
           <div className="mt-5 bg-white/70 rounded-2xl p-5">
+
             <p className="text-sm font-bold text-[#df6f2a] uppercase">
               Observações
             </p>
@@ -205,9 +214,11 @@ export default function RelatorioPage({ params }: Props) {
               value={novasObservacoes}
               onChange={(e) => setNovasObservacoes(e.target.value)}
             />
+
           </div>
 
           <div className="mt-5 bg-white/70 rounded-2xl p-5">
+
             <p className="text-sm font-bold text-[#df6f2a] uppercase">
               Fotos do veículo
             </p>
@@ -220,18 +231,34 @@ export default function RelatorioPage({ params }: Props) {
             />
 
             <div className="grid md:grid-cols-3 gap-4 mt-5">
+
               {(relatorio.fotos || []).map((foto, index) => (
+
                 <img
                   key={index}
                   src={foto}
                   alt="Foto do veículo"
                   className="w-full h-48 object-cover rounded-2xl"
                 />
+
               ))}
+
             </div>
+
           </div>
 
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(
+              `Olá! Seu veículo está atualmente em: ${novoStatus}.\n\nAcompanhe seu serviço em:\nhttps://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
+            )}`}
+            target="_blank"
+            className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-4 rounded-2xl font-black inline-block mt-6"
+          >
+            Enviar atualização no WhatsApp
+          </a>
+
           <div className="flex gap-4 mt-6 flex-wrap">
+
             <button
               onClick={salvarAlteracoes}
               className="bg-[#df6f2a] hover:bg-[#c95f20] text-white transition px-6 py-4 rounded-2xl font-black"
@@ -252,8 +279,11 @@ export default function RelatorioPage({ params }: Props) {
             >
               Excluir relatório
             </button>
+
           </div>
+
         </div>
+
       </div>
     </main>
   )
