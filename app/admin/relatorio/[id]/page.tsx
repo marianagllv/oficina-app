@@ -1,12 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
 
-type Props = {
-  params: Promise<{ id: string }>
-}
+const SENHA_ADMIN = 'wm2026'
 
 type Relatorio = {
   id: number
@@ -15,276 +13,236 @@ type Relatorio = {
   status: string
   servico: string
   observacoes?: string
-  fotos?: string[]
 }
 
-export default function RelatorioPage({ params }: Props) {
-  const router = useRouter()
+export default function AdminPage() {
 
-  const [relatorio, setRelatorio] = useState<Relatorio | null>(null)
-  const [novoStatus, setNovoStatus] = useState('')
-  const [novasObservacoes, setNovasObservacoes] = useState('')
+  const [autorizado, setAutorizado] = useState(false)
+  const [senha, setSenha] = useState('')
+
+  const [relatorios, setRelatorios] = useState<Relatorio[]>([])
+
+  const total = relatorios.length
+
+  const finalizados = relatorios.filter(
+    (r) => r.status === 'Finalizado'
+  ).length
+
+  const andamento = relatorios.filter(
+    (r) => r.status === 'Em andamento'
+  ).length
+
+  const pintura = relatorios.filter(
+    (r) => r.status === 'Pintura'
+  ).length
+
+  function entrar() {
+    if (senha === SENHA_ADMIN) {
+      setAutorizado(true)
+    } else {
+      alert('Senha incorreta')
+    }
+  }
 
   useEffect(() => {
-    async function iniciar() {
-      const { id } = await params
-      carregarRelatorio(id)
-    }
-
-    iniciar()
+    carregarRelatorios()
   }, [])
 
-  async function carregarRelatorio(id: string) {
-    const { data, error } = await supabase
+  async function carregarRelatorios() {
+
+    const { data } = await supabase
       .from('relatorios')
       .select('*')
-      .eq('id', id)
-      .single()
+      .order('id', { ascending: false })
 
-    if (error) {
-      console.log(error)
-      return
-    }
-
-    setRelatorio(data)
-    setNovoStatus(data.status)
-    setNovasObservacoes(data.observacoes || '')
+    setRelatorios(data || [])
   }
 
-  async function salvarAlteracoes() {
-    if (!relatorio) return
-
-    const { error } = await supabase
-      .from('relatorios')
-      .update({
-        status: novoStatus,
-        observacoes: novasObservacoes,
-      })
-      .eq('id', relatorio.id)
-
-    if (error) {
-      alert('Erro ao salvar alterações')
-      console.log(error)
-      return
-    }
-
-    alert('Alterações salvas!')
-    carregarRelatorio(String(relatorio.id))
-  }
-
-  async function enviarFoto(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!relatorio) return
-
-    const arquivo = e.target.files?.[0]
-    if (!arquivo) return
-
-    const nomeArquivo = `${relatorio.id}-${Date.now()}-${arquivo.name}`
-
-    const { error: uploadError } = await supabase.storage
-      .from('fotos-relatorios')
-      .upload(nomeArquivo, arquivo)
-
-    if (uploadError) {
-      alert('Erro ao enviar foto')
-      console.log(uploadError)
-      return
-    }
-
-    const { data } = supabase.storage
-      .from('fotos-relatorios')
-      .getPublicUrl(nomeArquivo)
-
-    const fotosAtuais = relatorio.fotos || []
-    const novasFotos = [...fotosAtuais, data.publicUrl]
-
-    const { error } = await supabase
-      .from('relatorios')
-      .update({
-        fotos: novasFotos,
-      })
-      .eq('id', relatorio.id)
-
-    if (error) {
-      alert('Erro ao salvar foto')
-      console.log(error)
-      return
-    }
-
-    alert('Foto enviada!')
-    carregarRelatorio(String(relatorio.id))
-  }
-
-  async function excluirRelatorio() {
-    if (!relatorio) return
-
-    const confirmar = confirm('Tem certeza que deseja excluir este relatório?')
-    if (!confirmar) return
-
-    const { error } = await supabase
-      .from('relatorios')
-      .delete()
-      .eq('id', relatorio.id)
-
-    if (error) {
-      alert('Erro ao excluir relatório')
-      console.log(error)
-      return
-    }
-
-    alert('Relatório excluído!')
-    router.push('/admin')
-  }
-
-  if (!relatorio) {
+  if (!autorizado) {
     return (
-      <main className="min-h-screen bg-[#4b0d16] text-white flex items-center justify-center">
-        <h1 className="text-3xl font-bold">Carregando relatório...</h1>
+      <main className="min-h-screen bg-[#4b0d16] flex items-center justify-center p-6">
+
+        <div className="bg-[#f4dfbd] p-8 rounded-3xl w-full max-w-md shadow-2xl">
+
+          <h1 className="text-4xl font-black text-[#2b1a1a]">
+            Área Admin
+          </h1>
+
+          <p className="text-[#5c4033] mt-3">
+            Digite a senha para acessar o painel.
+          </p>
+
+          <input
+            type="password"
+            placeholder="Digite a senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            className="w-full p-4 rounded-2xl border mt-6"
+          />
+
+          <button
+            onClick={entrar}
+            className="w-full bg-[#df6f2a] hover:bg-[#c95f20] transition text-white p-4 rounded-2xl font-black mt-4"
+          >
+            Entrar
+          </button>
+
+        </div>
+
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-[#4b0d16] text-[#fff3df] p-6">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen bg-[#4b0d16] p-6 text-[#fff3df]">
 
-        <a href="/admin" className="text-[#df6f2a] font-bold">
-          Voltar para o painel
-        </a>
+      <div className="max-w-6xl mx-auto">
 
-        <div className="mt-8 bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-8 shadow-2xl">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
-          <p className="text-[#df6f2a] font-black">
-            RELATÓRIO #{relatorio.id}
-          </p>
+          <div>
 
-          <h1 className="text-5xl font-black mt-2">
-            {relatorio.cliente}
-          </h1>
-
-          <p className="mt-3 text-2xl text-[#5c4033] font-semibold">
-            {relatorio.veiculo}
-          </p>
-
-          <div className="mt-8 grid md:grid-cols-2 gap-5">
-
-            <div className="bg-white/70 rounded-2xl p-5">
-
-              <p className="text-sm font-bold text-[#df6f2a] uppercase">
-                Status
-              </p>
-
-              <select
-                className="mt-3 w-full p-4 rounded-xl border bg-white"
-                value={novoStatus}
-                onChange={(e) => setNovoStatus(e.target.value)}
-              >
-                <option value="Em análise">Em análise</option>
-                <option value="Em andamento">Em andamento</option>
-                <option value="Funilaria">Funilaria</option>
-                <option value="Pintura">Pintura</option>
-                <option value="Polimento">Polimento</option>
-                <option value="Finalizado">Finalizado</option>
-                <option value="Entregue">Entregue</option>
-              </select>
-
-            </div>
-
-            <div className="bg-white/70 rounded-2xl p-5">
-
-              <p className="text-sm font-bold text-[#df6f2a] uppercase">
-                Serviço
-              </p>
-
-              <p className="mt-3 text-xl font-semibold">
-                {relatorio.servico}
-              </p>
-
-            </div>
-
-          </div>
-
-          <div className="mt-5 bg-white/70 rounded-2xl p-5">
-
-            <p className="text-sm font-bold text-[#df6f2a] uppercase">
-              Observações
+            <p className="uppercase text-[#df6f2a] font-black">
+              Painel administrativo
             </p>
 
-            <textarea
-              className="mt-3 w-full p-4 rounded-xl border bg-white min-h-40"
-              value={novasObservacoes}
-              onChange={(e) => setNovasObservacoes(e.target.value)}
-            />
+            <h1 className="text-5xl font-black mt-2">
+              WM Funilaria
+            </h1>
 
           </div>
 
-          <div className="mt-5 bg-white/70 rounded-2xl p-5">
-
-            <p className="text-sm font-bold text-[#df6f2a] uppercase">
-              Fotos do veículo
-            </p>
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={enviarFoto}
-              className="mt-4"
-            />
-
-            <div className="grid md:grid-cols-3 gap-4 mt-5">
-
-              {(relatorio.fotos || []).map((foto, index) => (
-
-                <img
-                  key={index}
-                  src={foto}
-                  alt="Foto do veículo"
-                  className="w-full h-48 object-cover rounded-2xl"
-                />
-
-              ))}
-
-            </div>
-
-          </div>
-
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(
-              `Olá! Seu veículo está atualmente em: ${novoStatus}.\n\nAcompanhe seu serviço em:\nhttps://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
-            )}`}
-            target="_blank"
-            className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-4 rounded-2xl font-black inline-block mt-6"
+          <Link
+            href="/admin/novo"
+            className="bg-[#df6f2a] hover:bg-[#c95f20] transition px-6 py-4 rounded-2xl font-black text-center"
           >
-            Enviar atualização no WhatsApp
-          </a>
+            Novo Relatório
+          </Link>
 
-          <div className="flex gap-4 mt-6 flex-wrap">
+        </div>
 
-            <button
-              onClick={salvarAlteracoes}
-              className="bg-[#df6f2a] hover:bg-[#c95f20] text-white transition px-6 py-4 rounded-2xl font-black"
-            >
-              Salvar alterações
-            </button>
+        <div className="grid md:grid-cols-4 gap-4 mt-10">
 
-            <button
-              onClick={() => window.print()}
-              className="bg-[#2b1a1a] hover:bg-black text-white transition px-6 py-4 rounded-2xl font-black"
-            >
-              Gerar PDF
-            </button>
+          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">
+              Total
+            </p>
 
-            <button
-              onClick={excluirRelatorio}
-              className="bg-red-700 hover:bg-red-800 text-white transition px-6 py-4 rounded-2xl font-black"
-            >
-              Excluir relatório
-            </button>
+            <h2 className="text-5xl font-black mt-3">
+              {total}
+            </h2>
+          </div>
 
+          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">
+              Em andamento
+            </p>
+
+            <h2 className="text-5xl font-black mt-3">
+              {andamento}
+            </h2>
+          </div>
+
+          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">
+              Pintura
+            </p>
+
+            <h2 className="text-5xl font-black mt-3">
+              {pintura}
+            </h2>
+          </div>
+
+          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">
+              Finalizados
+            </p>
+
+            <h2 className="text-5xl font-black mt-3">
+              {finalizados}
+            </h2>
           </div>
 
         </div>
 
+        <div className="grid gap-6 mt-10">
+
+          {relatorios.map((relatorio) => (
+
+            <Link
+              key={relatorio.id}
+              href={`/admin/relatorio/${relatorio.id}`}
+              className="bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-6 shadow-xl hover:scale-[1.01] transition"
+            >
+
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+                <div>
+
+                  <p className="text-[#df6f2a] font-black">
+                    RELATÓRIO #{relatorio.id}
+                  </p>
+
+                  <h2 className="text-4xl font-black mt-2">
+                    {relatorio.cliente}
+                  </h2>
+
+                  <p className="text-[#5c4033] text-xl mt-2 font-semibold">
+                    {relatorio.veiculo}
+                  </p>
+
+                </div>
+
+                <div className="bg-white/70 rounded-2xl px-5 py-4">
+
+                  <p className="text-sm uppercase font-black text-[#df6f2a]">
+                    Status
+                  </p>
+
+                  <p className="text-2xl font-black mt-1">
+                    {relatorio.status}
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div className="mt-5">
+
+                <p className="text-sm uppercase font-black text-[#df6f2a]">
+                  Serviço
+                </p>
+
+                <p className="mt-2 text-lg">
+                  {relatorio.servico}
+                </p>
+
+              </div>
+
+              {relatorio.observacoes && (
+
+                <div className="mt-5">
+
+                  <p className="text-sm uppercase font-black text-[#df6f2a]">
+                    Observações
+                  </p>
+
+                  <p className="mt-2 text-lg">
+                    {relatorio.observacoes}
+                  </p>
+
+                </div>
+
+              )}
+
+            </Link>
+
+          ))}
+
+        </div>
+
       </div>
+
     </main>
   )
 }
