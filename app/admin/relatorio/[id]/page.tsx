@@ -60,9 +60,9 @@ export default function AdminPage() {
 
   if (!autorizado) {
     return (
-      <main className="min-h-screen bg-[#4b0d16] flex items-center justify-center p-6">
+      <main className="min-h-screen bg-gradient-to-br from-[#3b0711] to-[#1f0308] flex items-center justify-center p-6">
 
-        <div className="bg-[#f4dfbd] p-8 rounded-3xl w-full max-w-md shadow-2xl">
+        <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] p-8 rounded-3xl w-full max-w-md shadow-2xl border border-white/30">
 
           <h1 className="text-4xl font-black text-[#2b1a1a]">
             Área Admin
@@ -77,12 +77,12 @@ export default function AdminPage() {
             placeholder="Digite a senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            className="w-full p-4 rounded-2xl border mt-6"
+            className="w-full p-4 rounded-2xl border mt-6 bg-white/80 backdrop-blur-sm"
           />
 
           <button
             onClick={entrar}
-            className="w-full bg-[#df6f2a] hover:bg-[#c95f20] transition text-white p-4 rounded-2xl font-black mt-4"
+            className="w-full bg-[#df6f2a] hover:bg-[#c95f20] transition duration-300 text-white p-4 rounded-2xl font-black mt-4 shadow-lg hover:scale-[1.02]"
           >
             Entrar
           </button>
@@ -94,7 +94,7 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#4b0d16] p-6 text-[#fff3df]">
+    <main className="min-h-screen bg-gradient-to-br from-[#3b0711] to-[#1f0308] p-6 text-[#fff3df]">
 
       <div className="max-w-6xl mx-auto">
 
@@ -102,11 +102,11 @@ export default function AdminPage() {
 
           <div>
 
-            <p className="uppercase text-[#df6f2a] font-black">
+            <p className="uppercase text-[#df6f2a] font-black tracking-[3px]">
               Painel administrativo
             </p>
 
-            <h1 className="text-5xl font-black mt-2">
+            <h1 className="text-5xl font-black mt-2 drop-shadow-lg">
               WM Funilaria
             </h1>
 
@@ -114,7 +114,7 @@ export default function AdminPage() {
 
           <Link
             href="/admin/novo"
-            className="bg-[#df6f2a] hover:bg-[#c95f20] transition px-6 py-4 rounded-2xl font-black text-center"
+            className="bg-[#df6f2a] hover:bg-[#c95f20] transition duration-300 px-6 py-4 rounded-2xl font-black text-center shadow-2xl hover:scale-[1.03]"
           >
             Novo Relatório
           </Link>
@@ -123,7 +123,7 @@ export default function AdminPage() {
 
         <div className="grid md:grid-cols-4 gap-4 mt-10">
 
-          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl border border-white/40">
             <p className="text-sm uppercase font-black text-[#df6f2a]">
               Total
             </p>
@@ -133,7 +133,7 @@ export default function AdminPage() {
             </h2>
           </div>
 
-          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl border border-white/40">
             <p className="text-sm uppercase font-black text-[#df6f2a]">
               Em andamento
             </p>
@@ -143,7 +143,7 @@ export default function AdminPage() {
             </h2>
           </div>
 
-          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl border border-white/40">
             <p className="text-sm uppercase font-black text-[#df6f2a]">
               Pintura
             </p>
@@ -153,7 +153,7 @@ export default function AdminPage() {
             </h2>
           </div>
 
-          <div className="bg-[#f4dfbd] text-[#2b1a1a] p-6 rounded-3xl shadow-xl">
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl border border-white/40">
             <p className="text-sm uppercase font-black text-[#df6f2a]">
               Finalizados
             </p>
@@ -172,7 +172,7 @@ export default function AdminPage() {
             <Link
               key={relatorio.id}
               href={`/admin/relatorio/${relatorio.id}`}
-              className="bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-6 shadow-xl hover:scale-[1.01] transition"
+              className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] rounded-3xl p-6 shadow-2xl hover:scale-[1.02] hover:-translate-y-1 transition duration-300 border border-white/40 backdrop-blur-sm"
             >
 
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
@@ -193,7 +193,7 @@ export default function AdminPage() {
 
                 </div>
 
-                <div className="bg-white/70 rounded-2xl px-5 py-4">
+                <div className="bg-white/70 rounded-2xl px-5 py-4 backdrop-blur-sm">
 
                   <p className="text-sm uppercase font-black text-[#df6f2a]">
                     Status
