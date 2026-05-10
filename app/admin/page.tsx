@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+
+const SENHA_ADMIN = 'wm2026'
 
 type Relatorio = {
   id: number
@@ -13,138 +16,160 @@ type Relatorio = {
 }
 
 export default function AdminPage() {
+
+  const [autorizado, setAutorizado] = useState(false)
+  const [senha, setSenha] = useState('')
+
   const [relatorios, setRelatorios] = useState<Relatorio[]>([])
 
+  function entrar() {
+    if (senha === SENHA_ADMIN) {
+      setAutorizado(true)
+    } else {
+      alert('Senha incorreta')
+    }
+  }
+
   useEffect(() => {
-    buscarRelatorios()
+    carregarRelatorios()
   }, [])
 
-  async function buscarRelatorios() {
-    const { data, error } = await supabase
+  async function carregarRelatorios() {
+
+    const { data } = await supabase
       .from('relatorios')
       .select('*')
       .order('id', { ascending: false })
 
-    if (error) {
-      console.log(error)
-      return
-    }
-
     setRelatorios(data || [])
   }
 
-  return (
-    <main className="min-h-screen bg-[#4b0d16] text-[#fff3df]">
-      <div className="max-w-7xl mx-auto p-6">
+  if (!autorizado) {
+    return (
+      <main className="min-h-screen bg-[#4b0d16] flex items-center justify-center p-6">
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
+        <div className="bg-[#f4dfbd] p-8 rounded-3xl w-full max-w-md shadow-2xl">
 
-          <div className="flex items-center gap-5">
+          <h1 className="text-4xl font-black text-[#2b1a1a]">
+            Área Admin
+          </h1>
 
-            <img
-              src="/logo.jpeg"
-              alt="WM Funilaria"
-              className="w-28 h-28 object-contain"
-            />
+          <p className="text-[#5c4033] mt-3">
+            Digite a senha para acessar o painel.
+          </p>
 
-            <div>
+          <input
+            type="password"
+            placeholder="Digite a senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            className="w-full p-4 rounded-2xl border mt-6"
+          />
 
-              <p className="uppercase tracking-[4px] text-[#df6f2a] font-bold text-sm">
-                Painel Administrativo
-              </p>
-
-              <h1 className="text-4xl md:text-5xl font-black mt-2">
-                WM Funilaria & Pintura
-              </h1>
-
-              <p className="text-[#f4dfbd] mt-2">
-                Clique em um relatório para abrir os detalhes.
-              </p>
-
-            </div>
-
-          </div>
-
-          <a
-            href="/admin/novo"
-            className="bg-[#df6f2a] hover:bg-[#c95f20] transition px-6 py-4 rounded-2xl font-bold text-lg shadow-lg"
+          <button
+            onClick={entrar}
+            className="w-full bg-[#df6f2a] hover:bg-[#c95f20] transition text-white p-4 rounded-2xl font-black mt-4"
           >
-            + Novo Relatório
-          </a>
+            Entrar
+          </button>
 
         </div>
 
-        <div className="grid gap-6">
+      </main>
+    )
+  }
+
+  return (
+    <main className="min-h-screen bg-[#4b0d16] p-6 text-[#fff3df]">
+
+      <div className="max-w-6xl mx-auto">
+
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+          <div>
+
+            <p className="uppercase text-[#df6f2a] font-black">
+              Painel administrativo
+            </p>
+
+            <h1 className="text-5xl font-black mt-2">
+              WM Funilaria
+            </h1>
+
+          </div>
+
+          <Link
+            href="/admin/novo"
+            className="bg-[#df6f2a] hover:bg-[#c95f20] transition px-6 py-4 rounded-2xl font-black text-center"
+          >
+            Novo Relatório
+          </Link>
+
+        </div>
+
+        <div className="grid gap-6 mt-10">
 
           {relatorios.map((relatorio) => (
 
-            <a
+            <Link
               key={relatorio.id}
               href={`/admin/relatorio/${relatorio.id}`}
-              className="block bg-[#f4dfbd] text-[#2b1a1a] border-4 border-[#c7c7c7] rounded-3xl p-6 shadow-2xl hover:scale-[1.01] transition"
+              className="bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-6 shadow-xl hover:scale-[1.01] transition"
             >
 
-              <div className="flex flex-col md:flex-row justify-between gap-5">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
                 <div>
 
-                  <p className="text-[#df6f2a] font-black text-sm">
+                  <p className="text-[#df6f2a] font-black">
                     RELATÓRIO #{relatorio.id}
                   </p>
 
-                  <h2 className="text-3xl font-black mt-2">
+                  <h2 className="text-4xl font-black mt-2">
                     {relatorio.cliente}
                   </h2>
 
-                  <p className="mt-2 text-lg text-[#5c4033] font-semibold">
+                  <p className="text-[#5c4033] text-xl mt-2 font-semibold">
                     {relatorio.veiculo}
                   </p>
 
                 </div>
 
-                <span className="bg-[#df6f2a] text-white px-5 py-3 rounded-full font-bold shadow h-fit">
-                  {relatorio.status}
-                </span>
+                <div className="bg-white/70 rounded-2xl px-5 py-4">
+
+                  <p className="text-sm uppercase font-black text-[#df6f2a]">
+                    Status
+                  </p>
+
+                  <p className="text-2xl font-black mt-1">
+                    {relatorio.status}
+                  </p>
+
+                </div>
 
               </div>
 
-              <div className="mt-6 grid md:grid-cols-2 gap-4">
+              <div className="mt-5">
 
-                <div className="bg-white/70 rounded-2xl p-4">
+                <p className="text-sm uppercase font-black text-[#df6f2a]">
+                  Serviço
+                </p>
 
-                  <p className="text-sm font-bold text-[#df6f2a] uppercase">
-                    Serviço
-                  </p>
-
-                  <p className="mt-2 text-lg font-semibold">
-                    {relatorio.servico}
-                  </p>
-
-                </div>
-
-                <div className="bg-white/70 rounded-2xl p-4">
-
-                  <p className="text-sm font-bold text-[#df6f2a] uppercase">
-                    Código
-                  </p>
-
-                  <p className="mt-2 text-lg font-semibold">
-                    #{relatorio.id}
-                  </p>
-
-                </div>
+                <p className="mt-2 text-lg">
+                  {relatorio.servico}
+                </p>
 
               </div>
 
               {relatorio.observacoes && (
 
-                <div className="mt-5 bg-white/70 rounded-2xl p-4">
+                <div className="mt-5">
 
-                  <p className="text-sm font-bold text-[#df6f2a] uppercase">
+                  <p className="text-sm uppercase font-black text-[#df6f2a]">
                     Observações
                   </p>
 
-                  <p className="mt-2 text-[#3a2b2b]">
+                  <p className="mt-2 text-lg">
                     {relatorio.observacoes}
                   </p>
 
@@ -152,13 +177,14 @@ export default function AdminPage() {
 
               )}
 
-            </a>
+            </Link>
 
           ))}
 
         </div>
 
       </div>
+
     </main>
   )
 }
