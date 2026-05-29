@@ -8,6 +8,7 @@ export default function NovoRelatorioPage() {
   const router = useRouter()
 
   const [cliente, setCliente] = useState('')
+  const [telefone, setTelefone] = useState('')
   const [veiculo, setVeiculo] = useState('')
   const [status, setStatus] = useState('')
   const [servico, setServico] = useState('')
@@ -18,6 +19,7 @@ export default function NovoRelatorioPage() {
 
     const { error } = await supabase.from('relatorios').insert({
       cliente,
+      telefone,
       veiculo,
       status,
       servico,
@@ -37,16 +39,11 @@ export default function NovoRelatorioPage() {
   return (
     <main className="min-h-screen bg-[#4b0d16] text-[#fff3df] p-6">
       <div className="max-w-3xl mx-auto">
-
-        <a
-          href="/admin"
-          className="text-[#df6f2a] font-bold"
-        >
+        <a href="/admin" className="text-[#df6f2a] font-bold">
           ← Voltar para o painel
         </a>
 
         <div className="flex items-center gap-4 mt-6">
-
           <img
             src="/logo.jpeg"
             alt="WM Funilaria"
@@ -54,27 +51,27 @@ export default function NovoRelatorioPage() {
           />
 
           <div>
-            <h1 className="text-4xl font-black">
-              Novo Relatório
-            </h1>
-
-            <p className="text-[#f4dfbd] mt-1">
-              WM Funilaria & Pintura
-            </p>
+            <h1 className="text-4xl font-black">Novo Relatório</h1>
+            <p className="text-[#f4dfbd] mt-1">WM Funilaria & Pintura</p>
           </div>
-
         </div>
 
         <form
           onSubmit={salvarRelatorio}
           className="mt-8 bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-6 shadow-2xl grid gap-5"
         >
-
           <input
             className="p-4 rounded-xl border"
             placeholder="Nome do cliente"
             value={cliente}
             onChange={(e) => setCliente(e.target.value)}
+          />
+
+          <input
+            className="p-4 rounded-xl border"
+            placeholder="Telefone do cliente com DDD. Ex: 84991107573"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
           />
 
           <input
@@ -89,37 +86,14 @@ export default function NovoRelatorioPage() {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
-            <option value="">
-              Selecione o status
-            </option>
-
-            <option value="Em análise">
-              Em análise
-            </option>
-
-            <option value="Em andamento">
-              Em andamento
-            </option>
-
-            <option value="Funilaria">
-              Funilaria
-            </option>
-
-            <option value="Pintura">
-              Pintura
-            </option>
-
-            <option value="Polimento">
-              Polimento
-            </option>
-
-            <option value="Finalizado">
-              Finalizado
-            </option>
-
-            <option value="Entregue">
-              Entregue
-            </option>
+            <option value="">Selecione o status</option>
+            <option value="Em análise">Em análise</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Funilaria">Funilaria</option>
+            <option value="Pintura">Pintura</option>
+            <option value="Polimento">Polimento</option>
+            <option value="Finalizado">Finalizado</option>
+            <option value="Entregue">Entregue</option>
           </select>
 
           <input
@@ -136,12 +110,9 @@ export default function NovoRelatorioPage() {
             onChange={(e) => setObservacoes(e.target.value)}
           />
 
-          <button
-            className="bg-[#df6f2a] hover:bg-[#c95f20] text-white transition p-4 rounded-2xl font-black"
-          >
+          <button className="bg-[#df6f2a] hover:bg-[#c95f20] text-white transition p-4 rounded-2xl font-black">
             Salvar Relatório
           </button>
-
         </form>
       </div>
     </main>
