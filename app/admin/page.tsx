@@ -9,6 +9,7 @@ const SENHA_ADMIN = 'wm2026'
 type Relatorio = {
   id: number
   cliente: string
+  telefone?: string
   veiculo: string
   status: string
   servico: string
@@ -16,11 +17,14 @@ type Relatorio = {
 }
 
 export default function AdminPage() {
-
   const [autorizado, setAutorizado] = useState(false)
   const [senha, setSenha] = useState('')
-
   const [relatorios, setRelatorios] = useState<Relatorio[]>([])
+
+  const total = relatorios.length
+  const finalizados = relatorios.filter((r) => r.status === 'Finalizado').length
+  const andamento = relatorios.filter((r) => r.status === 'Em andamento').length
+  const pintura = relatorios.filter((r) => r.status === 'Pintura').length
 
   function entrar() {
     if (senha === SENHA_ADMIN) {
@@ -35,7 +39,6 @@ export default function AdminPage() {
   }, [])
 
   async function carregarRelatorios() {
-
     const { data } = await supabase
       .from('relatorios')
       .select('*')
@@ -46,10 +49,8 @@ export default function AdminPage() {
 
   if (!autorizado) {
     return (
-      <main className="min-h-screen bg-[#4b0d16] flex items-center justify-center p-6">
-
-        <div className="bg-[#f4dfbd] p-8 rounded-3xl w-full max-w-md shadow-2xl">
-
+      <main className="min-h-screen bg-gradient-to-br from-[#3b0711] to-[#1f0308] flex items-center justify-center p-6">
+        <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] p-8 rounded-3xl w-full max-w-md shadow-2xl border border-white/30">
           <h1 className="text-4xl font-black text-[#2b1a1a]">
             Área Admin
           </h1>
@@ -63,7 +64,7 @@ export default function AdminPage() {
             placeholder="Digite a senha"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
-            className="w-full p-4 rounded-2xl border mt-6"
+            className="w-full p-4 rounded-2xl border mt-6 bg-white/80"
           />
 
           <button
@@ -72,30 +73,23 @@ export default function AdminPage() {
           >
             Entrar
           </button>
-
         </div>
-
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-[#4b0d16] p-6 text-[#fff3df]">
-
+    <main className="min-h-screen bg-gradient-to-br from-[#3b0711] to-[#1f0308] p-6 text-[#fff3df]">
       <div className="max-w-6xl mx-auto">
-
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-
           <div>
-
-            <p className="uppercase text-[#df6f2a] font-black">
+            <p className="uppercase text-[#df6f2a] font-black tracking-[3px]">
               Painel administrativo
             </p>
 
             <h1 className="text-5xl font-black mt-2">
               WM Funilaria
             </h1>
-
           </div>
 
           <Link
@@ -104,23 +98,39 @@ export default function AdminPage() {
           >
             Novo Relatório
           </Link>
+        </div>
 
+        <div className="grid md:grid-cols-4 gap-4 mt-10">
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">Total</p>
+            <h2 className="text-5xl font-black mt-3">{total}</h2>
+          </div>
+
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">Em andamento</p>
+            <h2 className="text-5xl font-black mt-3">{andamento}</h2>
+          </div>
+
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">Pintura</p>
+            <h2 className="text-5xl font-black mt-3">{pintura}</h2>
+          </div>
+
+          <div className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] p-6 rounded-3xl shadow-2xl">
+            <p className="text-sm uppercase font-black text-[#df6f2a]">Finalizados</p>
+            <h2 className="text-5xl font-black mt-3">{finalizados}</h2>
+          </div>
         </div>
 
         <div className="grid gap-6 mt-10">
-
           {relatorios.map((relatorio) => (
-
             <Link
               key={relatorio.id}
               href={`/admin/relatorio/${relatorio.id}`}
-              className="bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-6 shadow-xl hover:scale-[1.01] transition"
+              className="bg-gradient-to-br from-[#f4dfbd] to-[#e7cfa5] text-[#2b1a1a] rounded-3xl p-6 shadow-2xl hover:scale-[1.02] transition"
             >
-
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-
                 <div>
-
                   <p className="text-[#df6f2a] font-black">
                     RELATÓRIO #{relatorio.id}
                   </p>
@@ -133,10 +143,14 @@ export default function AdminPage() {
                     {relatorio.veiculo}
                   </p>
 
+                  {relatorio.telefone && (
+                    <p className="text-[#5c4033] mt-2 font-semibold">
+                      Tel: {relatorio.telefone}
+                    </p>
+                  )}
                 </div>
 
                 <div className="bg-white/70 rounded-2xl px-5 py-4">
-
                   <p className="text-sm uppercase font-black text-[#df6f2a]">
                     Status
                   </p>
@@ -144,13 +158,10 @@ export default function AdminPage() {
                   <p className="text-2xl font-black mt-1">
                     {relatorio.status}
                   </p>
-
                 </div>
-
               </div>
 
               <div className="mt-5">
-
                 <p className="text-sm uppercase font-black text-[#df6f2a]">
                   Serviço
                 </p>
@@ -158,13 +169,10 @@ export default function AdminPage() {
                 <p className="mt-2 text-lg">
                   {relatorio.servico}
                 </p>
-
               </div>
 
               {relatorio.observacoes && (
-
                 <div className="mt-5">
-
                   <p className="text-sm uppercase font-black text-[#df6f2a]">
                     Observações
                   </p>
@@ -172,19 +180,12 @@ export default function AdminPage() {
                   <p className="mt-2 text-lg">
                     {relatorio.observacoes}
                   </p>
-
                 </div>
-
               )}
-
             </Link>
-
           ))}
-
         </div>
-
       </div>
-
     </main>
   )
 }
