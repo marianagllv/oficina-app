@@ -18,7 +18,9 @@ export default async function RelatorioPage({ params }: Props) {
   if (!relatorio) {
     return (
       <main className="min-h-screen bg-[#4b0d16] text-white flex items-center justify-center">
-        <h1 className="text-3xl font-bold">Relatório não encontrado</h1>
+        <h1 className="text-3xl font-bold">
+          Relatório não encontrado
+        </h1>
       </main>
     )
   }
@@ -43,11 +45,16 @@ https://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
   return (
     <main className="min-h-screen bg-[#4b0d16] text-[#fff3df] p-6">
       <div className="max-w-5xl mx-auto">
-        <a href="/admin" className="text-[#df6f2a] font-bold">
+
+        <a
+          href="/admin"
+          className="text-[#df6f2a] font-bold"
+        >
           ← Voltar para o painel
         </a>
 
         <div className="mt-8 bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-8 shadow-2xl">
+
           <p className="text-[#df6f2a] font-black">
             RELATÓRIO #{relatorio.id}
           </p>
@@ -61,10 +68,12 @@ https://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
           </p>
 
           <div className="mt-8 grid md:grid-cols-3 gap-5">
+
             <div className="bg-white/70 rounded-2xl p-5">
               <p className="text-sm font-bold text-[#df6f2a] uppercase">
                 Status
               </p>
+
               <p className="mt-2 text-xl font-semibold">
                 {relatorio.status}
               </p>
@@ -74,6 +83,7 @@ https://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
               <p className="text-sm font-bold text-[#df6f2a] uppercase">
                 Serviço
               </p>
+
               <p className="mt-2 text-xl font-semibold">
                 {relatorio.servico}
               </p>
@@ -83,28 +93,45 @@ https://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
               <p className="text-sm font-bold text-[#df6f2a] uppercase">
                 Telefone
               </p>
+
               <p className="mt-2 text-xl font-semibold">
                 {relatorio.telefone || 'Não cadastrado'}
               </p>
             </div>
+
           </div>
 
           <div className="mt-5 bg-white/70 rounded-2xl p-5">
+
             <p className="text-sm font-bold text-[#df6f2a] uppercase">
               Observações
             </p>
+
             <p className="mt-2 text-lg">
               {relatorio.observacoes || 'Nenhuma observação cadastrada.'}
             </p>
+
           </div>
 
-          <a
-            href={linkWhatsApp}
-            target="_blank"
-            className="inline-block mt-6 bg-green-600 hover:bg-green-700 transition text-white px-6 py-4 rounded-2xl font-black"
-          >
-            Enviar código ao cliente
-          </a>
+          <div className="flex flex-col md:flex-row gap-4 mt-6">
+
+            <a
+              href={linkWhatsApp}
+              target="_blank"
+              className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-4 rounded-2xl font-black text-center"
+            >
+              Enviar código ao cliente
+            </a>
+
+            <a
+              href={`/admin/relatorio/${relatorio.id}/editar`}
+              className="bg-[#df6f2a] hover:bg-[#c95f20] transition text-white px-6 py-4 rounded-2xl font-black text-center"
+            >
+              Editar Status
+            </a>
+
+          </div>
+
         </div>
       </div>
     </main>
