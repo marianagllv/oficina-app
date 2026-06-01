@@ -254,6 +254,13 @@ https://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
             >
               Editar Status
             </a>
+
+            <a
+              href={`/admin/relatorio/${relatorio.id}/excluir`}
+              className="bg-red-600 hover:bg-red-700 transition text-white px-6 py-4 rounded-2xl font-black text-center"
+            >
+              Excluir Relatório
+            </a>
           </div>
         </div>
       </div>
