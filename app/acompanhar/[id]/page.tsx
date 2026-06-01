@@ -36,8 +36,18 @@ export default function ClienteRelatorio() {
 
   if (!relatorio) {
     return (
-      <main className="min-h-screen bg-[#4b0d16] text-white flex items-center justify-center">
-        <h1 className="text-3xl font-bold">Carregando relatório...</h1>
+      <main className="min-h-screen bg-[#4b0d16] text-white flex items-center justify-center p-6">
+        <div className="text-center">
+          <img
+            src="/logo.jpeg"
+            alt="WM Funilaria & Pintura"
+            className="w-28 h-28 object-contain mx-auto mb-5 rounded-2xl"
+          />
+
+          <h1 className="text-3xl font-black">
+            Carregando relatório...
+          </h1>
+        </div>
       </main>
     )
   }
@@ -47,70 +57,88 @@ export default function ClienteRelatorio() {
     : []
 
   return (
-    <main className="min-h-screen bg-[#4b0d16] text-[#fff3df] p-6">
+    <main className="min-h-screen bg-gradient-to-br from-[#4b0d16] via-[#2b0610] to-[#140207] text-[#fff3df] p-6">
       <div className="max-w-5xl mx-auto">
-        <div className="bg-[#f4dfbd] text-[#2b1a1a] rounded-3xl p-8 shadow-2xl">
-          <p className="text-[#df6f2a] font-black">
+
+        <header className="text-center mb-8">
+          <img
+            src="/logo.jpeg"
+            alt="WM Funilaria & Pintura"
+            className="w-32 h-32 object-contain mx-auto rounded-3xl shadow-2xl"
+          />
+
+          <p className="mt-5 uppercase tracking-[3px] text-[#df6f2a] font-black">
             WM Funilaria & Pintura
           </p>
 
-          <h1 className="text-5xl font-black mt-2">
+          <h1 className="text-4xl md:text-6xl font-black mt-3">
             Acompanhamento do Serviço
           </h1>
 
-          <p className="mt-4 text-[#5c4033] font-semibold">
+          <p className="mt-4 text-[#f4dfbd] font-semibold">
             Código do relatório: #{relatorio.id}
           </p>
+        </header>
 
-          <div className="mt-8 grid md:grid-cols-2 gap-5">
-            <div className="bg-white/70 rounded-2xl p-5">
+        <section className="bg-[#f4dfbd] text-[#2b1a1a] rounded-[2rem] p-6 md:p-8 shadow-2xl border border-white/20">
+
+          <div className="bg-white rounded-[2rem] p-6 shadow-xl text-center">
+            <p className="text-sm font-black text-[#df6f2a] uppercase tracking-[2px]">
+              Status atual
+            </p>
+
+            <h2 className="mt-3 text-4xl md:text-6xl font-black">
+              {relatorio.status}
+            </h2>
+
+            <p className="mt-3 text-[#5c4033] font-semibold">
+              Seu veículo está sendo acompanhado pela equipe da WM.
+            </p>
+          </div>
+
+          <div className="mt-6 grid md:grid-cols-2 gap-5">
+            <div className="bg-white/80 rounded-3xl p-5">
               <p className="text-sm font-bold text-[#df6f2a] uppercase">
                 Cliente
               </p>
-              <p className="mt-2 text-xl font-semibold">
+
+              <p className="mt-2 text-2xl font-black">
                 {relatorio.cliente}
               </p>
             </div>
 
-            <div className="bg-white/70 rounded-2xl p-5">
+            <div className="bg-white/80 rounded-3xl p-5">
               <p className="text-sm font-bold text-[#df6f2a] uppercase">
                 Veículo
               </p>
-              <p className="mt-2 text-xl font-semibold">
+
+              <p className="mt-2 text-2xl font-black">
                 {relatorio.veiculo}
               </p>
             </div>
           </div>
 
-          <div className="mt-5 bg-white/70 rounded-2xl p-6">
-            <p className="text-sm font-bold text-[#df6f2a] uppercase">
-              Status atual
-            </p>
-
-            <p className="mt-3 text-4xl font-black">
-              {relatorio.status}
-            </p>
-          </div>
-
-          <div className="mt-5 bg-white/70 rounded-2xl p-5">
+          <div className="mt-5 bg-white/80 rounded-3xl p-5">
             <p className="text-sm font-bold text-[#df6f2a] uppercase">
               Serviço
             </p>
-            <p className="mt-3 text-xl">
+
+            <p className="mt-3 text-xl leading-relaxed">
               {relatorio.servico}
             </p>
           </div>
 
-          <div className="mt-5 bg-white/70 rounded-2xl p-5">
+          <div className="mt-5 bg-white/80 rounded-3xl p-5">
             <p className="text-sm font-bold text-[#df6f2a] uppercase">
-              Observações
+              Observações da oficina
             </p>
-            <p className="mt-3 text-lg">
+
+            <p className="mt-3 text-lg leading-relaxed text-[#3a2525]">
               {relatorio.observacoes || 'Sem observações no momento.'}
             </p>
           </div>
 
-          <div className="mt-5 bg-white/70 rounded-2xl p-5">
+          <div className="mt-5 bg-white/80 rounded-3xl p-5">
             <p className="text-sm font-bold text-[#df6f2a] uppercase">
               Fotos do serviço
             </p>
@@ -122,7 +150,7 @@ export default function ClienteRelatorio() {
                     key={index}
                     src={foto}
                     alt={`Foto ${index + 1}`}
-                    className="w-full h-52 object-cover rounded-2xl"
+                    className="w-full h-64 object-cover rounded-3xl shadow-lg"
                   />
                 ))}
               </div>
@@ -132,7 +160,19 @@ export default function ClienteRelatorio() {
               </p>
             )}
           </div>
-        </div>
+
+        </section>
+
+        <footer className="text-center mt-8 text-[#f4dfbd]">
+          <p className="font-black">
+            WM Funilaria & Pintura
+          </p>
+
+          <p className="mt-1 text-sm">
+            Seu carro novo de novo.
+          </p>
+        </footer>
+
       </div>
     </main>
   )

@@ -1,4 +1,4 @@
-'use client'
+ 'use client'
 
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
@@ -237,31 +237,38 @@ https://oficina-app-kappa.vercel.app/acompanhar/${relatorio.id}`
                 Nenhuma foto enviada ainda.
               </p>
             )}
-          </div>
+             </div>
 
           <div className="flex flex-col md:flex-row gap-4 mt-6">
-            <a
-              href={linkWhatsApp}
-              target="_blank"
-              className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-4 rounded-2xl font-black text-center"
-            >
-              Enviar código ao cliente
-            </a>
+  <a
+    href={linkWhatsApp}
+    target="_blank"
+    className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-4 rounded-2xl font-black text-center"
+  >
+    Enviar código ao cliente
+  </a>
 
-            <a
-              href={`/admin/relatorio/${relatorio.id}/editar`}
-              className="bg-[#df6f2a] hover:bg-[#c95f20] transition text-white px-6 py-4 rounded-2xl font-black text-center"
-            >
-              Editar Status
-            </a>
+  <a
+    href={`/admin/relatorio/${relatorio.id}/editar`}
+    className="bg-[#df6f2a] hover:bg-[#c95f20] transition text-white px-6 py-4 rounded-2xl font-black text-center"
+  >
+    Editar Status
+  </a>
 
-            <a
-              href={`/admin/relatorio/${relatorio.id}/excluir`}
-              className="bg-red-600 hover:bg-red-700 transition text-white px-6 py-4 rounded-2xl font-black text-center"
-            >
-              Excluir Relatório
-            </a>
-          </div>
+  <a
+    href={`/admin/relatorio/${relatorio.id}/editar-dados`}
+    className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-4 rounded-2xl font-black text-center"
+  >
+    Editar Dados
+  </a>
+
+  <a
+    href={`/admin/relatorio/${relatorio.id}/excluir`}
+    className="bg-red-600 hover:bg-red-700 transition text-white px-6 py-4 rounded-2xl font-black text-center"
+  >
+    Excluir Relatório
+  </a>
+</div>
         </div>
       </div>
     </main>
