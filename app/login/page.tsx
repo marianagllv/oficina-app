@@ -1,29 +1,22 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
+  const [usuario, setUsuario] = useState('')
   const [senha, setSenha] = useState('')
   const [mensagem, setMensagem] = useState('')
 
   async function fazerLogin(e: React.FormEvent) {
     e.preventDefault()
-    setMensagem('Entrando...')
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password: senha,
-    })
-
-    if (error) {
-      setMensagem('Usuário ou senha inválidos.')
+    if (usuario === 'admin' && senha === 'wm2026') {
+      setMensagem('Acesso liberado!')
+      window.location.href = '/admin'
       return
     }
 
-    setMensagem('Acesso liberado! Abrindo painel...')
-    window.location.href = '/admin'
+    setMensagem('Usuário ou senha inválidos.')
   }
 
   return (
@@ -60,17 +53,17 @@ export default function LoginPage() {
         <form onSubmit={fazerLogin} className="grid gap-5 mt-8">
 
           <input
-            type="email"
+            type="text"
             placeholder="Usuário"
-            className="p-4 rounded-2xl bg-white/90 border border-white outline-none"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            className="p-4 rounded-2xl bg-white/90 border border-white text-[#2b1a1a] outline-none"
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)}
           />
 
           <input
             type="password"
             placeholder="Senha"
-            className="p-4 rounded-2xl bg-white/90 border border-white outline-none"
+            className="p-4 rounded-2xl bg-white/90 border border-white text-[#2b1a1a] outline-none"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
